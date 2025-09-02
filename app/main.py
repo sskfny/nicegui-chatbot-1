@@ -43,8 +43,5 @@ def _run():
     logger.info("Starting NiceGUI Chatbot...")
     ui.run(port=8080, title=get_config().get("service_name", "NiceGUI Chatbot"))
 
-if __name__ == "__main__":
-    _run()
-
-def __mp_main__():
+if __name__ in {"__main__", "__mp_main__"}:
     _run()
