@@ -41,7 +41,7 @@ def reload_page():
 
 def _run():
     logger.info("Starting NiceGUI Chatbot...")
-    app.run(port=8080, title=get_config().get("service_name", "NiceGUI Chatbot"))
+    ui.run(port=8080, title=get_config().get("service_name", "NiceGUI Chatbot"))
 
 if __name__ == "__main__":
     _run()
