@@ -19,7 +19,7 @@ from app.ui.components.metrics_panel import render_metrics_panel
 setup_otel()
 
 # Setup authentication routes
-setup_auth_routes(app)
+setup_auth_routes()
 
 @ui.page("/")
 def main_page():

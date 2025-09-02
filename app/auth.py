@@ -7,7 +7,7 @@ from starlette.requests import Request
 from typing import Callable
 
 
-def setup_auth_routes(app_inst: Callable) -> None:
+def setup_auth_routes() -> None:
     """Setup /auth/* routes based on config."""
     cfg = get_config()
     simple_auth = cfg.get("simple_auth")
@@ -17,7 +17,7 @@ def setup_auth_routes(app_inst: Callable) -> None:
     keycloak_redirect_uri = cfg.get("keycloak_redirect_uri")
 
     if simple_auth:
-        @app_inst.page("/auth/login")
+        @ui.page("/auth/login")
         def login_page():
             def do_login():
                 username = ui.query("#username").value
@@ -34,30 +34,30 @@ def setup_auth_routes(app_inst: Callable) -> None:
                 ui.input("Password", password=True, id="password")
                 ui.button("Login", on_click=do_login)
 
-        @app_inst.page("/auth/logout")
+        @ui.page("/auth/logout")
         def logout_page():
             app.storage.user["auth"] = False
             ui.notify("Logged out.")
             ui.open("/")
 
     elif keycloak_url and keycloak_client_id and keycloak_client_secret and keycloak_redirect_uri:
-        @app_inst.page("/auth/login")
+        @ui.page("/auth/login")
         def login_oidc():
             url = f"{keycloak_url}/realms/master/protocol/openid-connect/auth?client_id={keycloak_client_id}&response_type=code&redirect_uri={keycloak_redirect_uri}"
             ui.open(url)
 
-        @app_inst.page("/auth/callback")
+        @ui.page("/auth/callback")
         def callback_oidc():
             # Real implementation: handle OIDC callback, exchange code for token
             ui.notify("OIDC callback received.")
             ui.open("/")
 
-        @app_inst.page("/auth/logout")
+        @ui.page("/auth/logout")
         def logout_oidc():
             app.storage.user["auth"] = False
             ui.notify("Logged out.")
             ui.open("/")
     else:
-        @app_inst.page("/auth/{rest:path}")
+        @ui.page("/auth/{rest:path}")
         def auth_disabled(rest: str):
             ui.label("Auth disabled.").classes("text-red-600 text-xl mt-32 mx-auto")
